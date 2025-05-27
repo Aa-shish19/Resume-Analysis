@@ -1,0 +1,202 @@
+<!--Declares the document as an HTML5 page and sets the language to English.-->
+<!DOCTYPE html>
+<html lang="en">
+
+<!--<meta charset="UTF-8">: Supports all types of characters.
+<meta name="viewport">: Makes the page responsive on mobile.
+<title>: Sets the page title shown in the browser tab.-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Category Prediction</title>
+
+<!--  Applies a modern look with a blue gradient background and white text.
+Centers everything using Flexbox.-->
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #004e92, #000428);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+<!--Styles for the container box: adds blur effect, padding, shadows, and centers the content.-->
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+<!--Makes all headings yellow.-->
+    h1,
+    h2 {
+      text-align: center;
+      color: #ffcc00;
+    }
+
+<!--Sets the color of text to off-white and removes default bullet styling from lists.-->
+    p {
+      font-size: 16px;
+      color: #f2f2f2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      color: #f2f2f2;
+    }
+
+    li {
+      padding: 5px 0;
+    }
+
+    form {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Style the file input element */
+    input[type="file"] {
+      padding: 12px;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 300px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    input[type="submit"] {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background-color: #ffcc00;
+      border: none;
+      color: black;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease-in-out;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #e6b800;
+    }
+
+
+<!--Styles the box that shows results like category, job, skills, and education.-->
+    .result-box {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .result-box p {
+      margin: 8px 0;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #ffcc00;
+    }
+  </style>
+</head>
+
+
+<!--Creates an introductory section that describes what the app does.-->
+<body>
+
+  <div class="container">
+    <h1>Resume Screening AI System</h1>
+    <p>This AI system analyzes resumes and provides:</p>
+    <ul>
+      <li>✔ Resume Categorization</li>
+      <li>✔ Job Recommendations</li>
+      <li>✔ Resume Parsing (Information Extraction)</li>
+    </ul>
+  </div>
+
+<!--  Shows a form for the user to upload a resume.
+action="/pred": sends the file to /pred route on form submission.
+enctype="multipart/form-data": required for file uploads.
+required: ensures file must be selected before submission.-->
+  <div class="container">
+    <h2>Upload Your Resume</h2>
+    <p>Select a <strong>PDF</strong> or <strong>TXT</strong> file to analyze.</p>
+    <form action="/pred" method="post" enctype="multipart/form-data">
+      <input type="file" name="resume" accept=".pdf, .txt" required>
+      <input type="submit" value="Analyze Resume">
+    </form>
+
+
+<!--If there’s a message (like error or success), show it.-->
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+
+
+<!--If prediction exists, display the predicted job category and recommendation.-->
+    {% if predicted_category %}
+    <div class="result-box">
+      <p><span class="highlight">Category:</span> {{ predicted_category }}</p>
+      <p><span class="highlight">Recommended Job:</span> {{ recommended_job }}</p>
+
+
+<!--      Shows name, phone number, and email extracted from the resume.-->
+      <hr>
+      <h3>Extracted Information</h3>
+      <p><span class="highlight">Name:</span> {{ name }}</p>
+      <p><span class="highlight">Phone No:</span> {{ phone }}</p>
+      <p><span class="highlight">Email:</span> {{ email }}</p>
+
+<!--      If skills were found, list them. Otherwise, show "No skills found."-->
+      {% if extracted_skills %}
+      <p><span class="highlight">Skills:</span></p>
+      <ul>
+        {% for skill in extracted_skills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No skills found.</p>
+      {% endif %}
+
+<!--Same logic as above, but for education details.-->
+      {% if extracted_education %}
+      <h3>Education</h3>
+      <ul>
+        {% for edu in extracted_education %}
+        <li>{{ edu }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No education found.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+
+<!--    Closes the result container, body, and HTML document.-->
+  </div>
+
+</body>
+
+</html>
