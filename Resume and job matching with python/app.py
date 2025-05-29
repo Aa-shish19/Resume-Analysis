@@ -15,7 +15,6 @@ import pickle
 # I can define routes, handle user requests, and run the web server for my resume analysis tool.
 app = Flask(__name__)
 
-
 # Here, I loaded my pre-trained machine learning models and TF-IDF vectorizers using pickle.
 # These models help predict the resume's job category and recommend a suitable job role based on the uploaded text.
 #Load models
